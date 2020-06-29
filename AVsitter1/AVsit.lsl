@@ -53,6 +53,8 @@ key controller;
 string notecard_name = "AVpos";
 string sitter_text;
 list SITTERS;
+string MALE_POSENAME;
+string FEMALE_POSENAME;
 integer script_channel;
 key notecard_key;
 key notecard_query;
@@ -270,6 +272,28 @@ play_anim(integer new_index)
     {
         if (llGetAgentSize(llList2Key(SITTERS, script_channel)))
         {
+            integer sitterGender = llList2Integer(llGetObjectDetails(llGetPermissionsKey(), [OBJECT_BODY_SHAPE_TYPE]), 0);
+        
+            if (sitterGender)
+            {
+                if (MALE_POSENAME)
+                {
+                    if (new_index == first_anim)
+                    {
+                        CURRENT_ANIMATION_FILENAME = MALE_POSENAME;
+                    }
+                }
+            }
+            else
+            {            
+                if (FEMALE_POSENAME)
+                {
+                    if (new_index == first_anim)
+                    {
+                        CURRENT_ANIMATION_FILENAME = FEMALE_POSENAME;
+                    }
+                }
+            }
             llMessageLinked(LINK_SET, 90045, llList2String(MENU_LIST, anim_index) + "|" + CURRENT_ANIMATION_FILENAME, llList2Key(SITTERS, script_channel));
             if (!helper_mode)
             {
@@ -991,6 +1015,14 @@ default
                                 if (first_anim == -1)
                                 {
                                     first_anim = llGetListLength(MENU_LIST) - 1;
+                                }
+                                if (llList2String(parts, -1) == "M")
+                                {
+                                    MALE_POSENAME = part1;
+                                }
+                                else if (llList2String(parts, -1) == "F")
+                                {
+                                    FEMALE_POSENAME = part1;
                                 }
                             }
                         }
